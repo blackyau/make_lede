@@ -64,7 +64,7 @@ jobs:
       run: |
         echo "::set-env name=RELEASE_TAG::$(date +"%Y.%m.%d-%H:%M")"
         echo "🚀 Auto build" >> release.txt
-        jsdelivr_url = "https://cdn.jsdelivr.net/gh/${{ github.repository }}@${{ env.RELEASE_TAG }}/"
+        jsdelivr_url="https://cdn.jsdelivr.net/gh/${{ github.repository }}@${{ env.RELEASE_TAG }}/"
         echo "🔗 [jsdelivr CDN Download]($(jsdelivr_url))" >> release.txt
         echo "::set-output name=status::success"
 
