@@ -64,9 +64,8 @@ jobs:
       run: |
         echo "::set-env name=RELEASE_TAG::$(date +"%Y.%m.%d-%H:%M")"
         echo "🚀 Auto build" >> release.txt
-        echo "https://cdn.jsdelivr.net/gh/${{ github.repository }}@ ${{ env.RELEASE_TAG }}/" > /tmp/jsdelivr_url
-        echo "::set-env name=JSDELIVR_URL::$(cat /tmp/jsdelivr_url)"
-        echo "🔗 [jsdelivr CDN Download](${{ env.JSDELIVR_URL }})" >> release.txt
+        jsdelivr_url = https://cdn.jsdelivr.net/gh/${{ github.repository }}@$(date +"%Y.%m.%d-%H:%M")/"
+        echo "🔗 [jsdelivr CDN Download]($(jsdelivr_url)" >> release.txt
         echo "::set-output name=status::success"
 
 # 将文件 push 到 file 分支
