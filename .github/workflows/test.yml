@@ -63,9 +63,12 @@ jobs:
       if: env.UPLOAD_RELEASE == 'true' && !cancelled()
       run: |
         echo "::set-env name=RELEASE_TAG::$(date +"%Y.%m.%d-%H.%M")"
+        echo -n "file-" > /tmp/branch.txt
+        echo "${{ env.RELEASE_TAG }}" >> /tmp/branch.txt
+        echo "::set-env name=PUSH_BRANCH::$(cat /tmp/branch.txt)"
         echo "🚀 Auto build" >> release.txt
         echo -n "🔗 [jsdelivr CDN Download](https://cdn.jsdelivr.net/gh/${{ github.repository }}@" >> release.txt
-        echo "$(date +"%Y.%m.%d-%H.%M")/)" >> release.txt
+        echo "${{ env.RELEASE_TAG }}/)" >> release.txt
         echo "::set-output name=status::success"
 
 # 将文件 push 到 文件分支
@@ -75,7 +78,7 @@ jobs:
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets.TOKEN }}
-        branch: ${{ env.RELEASE_TAG }}
+        branch: ${{ env.PUSH_BRANCH }}
         force: true
         directory: ${{ env.FIRMWARE }}
 
