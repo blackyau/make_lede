@@ -56,25 +56,33 @@ jobs:
         git config --local user.name "GitHub Action"
         git add .
         git commit -m "deployed by GitHub Action" -a
+        echo "::set-env name=RELEASE_TAG::$(date +"%Y.%m.%d-%H.%M")"
+        echo "::set-output name=status::success"
+
+# 生成 branch 信息
+    - name: Generate branch
+      id: Gbranch
+      if: env.COMMIT_FILES == 'true' && !cancelled()
+      run: |
+        echo -n "file-" > /tmp/branch.txt
+        echo "${{ env.RELEASE_TAG }}" >> /tmp/branch.txt
+        echo "::set-env name=PUSH_BRANCH::$(cat /tmp/branch.txt)"
 
 # 生成 tag
     - name: Generate tag
       id: tag
-      if: env.UPLOAD_RELEASE == 'true' && !cancelled()
+      if: env.COMMIT_FILES == 'true' && !cancelled()
       run: |
         echo "::set-env name=RELEASE_TAG::$(date +"%Y.%m.%d-%H.%M")"
-        echo -n "file-" > /tmp/branch.txt
-        echo "${{ env.RELEASE_TAG }}" >> /tmp/branch.txt
-        echo "::set-env name=PUSH_BRANCH::$(cat /tmp/branch.txt)"
         echo "🚀 Auto build" >> release.txt
         echo -n "🔗 [jsdelivr CDN Download](https://cdn.jsdelivr.net/gh/${{ github.repository }}@" >> release.txt
-        echo "${{ env.RELEASE_TAG }}/)" >> release.txt
+        echo "${{ env.PUSH_BRANCH }}/)" >> release.txt
         echo "::set-output name=status::success"
-
+        
 # 将文件 push 到 文件分支
     - name: Push file
       id: push_file
-      if: env.UPLOAD_RELEASE == 'true' && !cancelled()
+      if: steps.commit.outputs.status == 'success' && !cancelled()
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets.TOKEN }}
