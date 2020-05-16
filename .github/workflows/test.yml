@@ -4,8 +4,8 @@ on:
   push:
     branches:
       - master
-#     paths:
-#       - '.config'
+    paths:
+      - '.config'
 #  schedule:
 #    - cron: 0 8 * * 5
 #  watch:
@@ -66,7 +66,7 @@ jobs:
       run: |
         echo "::set-env name=RELEASE_TAG::$(date +"%Y.%m.%d-%H.%M")"
         echo "🚀 Auto build" >> release.txt
-        echo "🔗 [jsdelivr CDN Download](${{ https://cdn.jsdelivr.net/gh/${{ github.repository }}@${{ env.RELEASE_TAG }}/ }})" >> release.txt
+        echo "🔗 [jsdelivr CDN Download](${{ https:\/\/cdn.jsdelivr.net\/gh\/${{ github.repository }}@${{ env.RELEASE_TAG }}\/ }})" >> release.txt
         echo "::set-output name=status::success"
 
 # 将文件 push 到 file 分支
