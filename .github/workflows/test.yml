@@ -68,14 +68,14 @@ jobs:
         echo "$(date +"%Y.%m.%d-%H.%M")/)" >> release.txt
         echo "::set-output name=status::success"
 
-# 将文件 push 到 file 分支
+# 将文件 push 到 文件分支
     - name: Push file
       id: push_file
       if: env.UPLOAD_RELEASE == 'true' && !cancelled()
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets.TOKEN }}
-        branch: 'file'
+        branch: ${{ env.RELEASE_TAG }}
         force: true
         directory: ${{ env.FIRMWARE }}
 
