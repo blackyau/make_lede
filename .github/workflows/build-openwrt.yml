@@ -121,6 +121,7 @@ jobs:
       if: env.UPLOAD_FIRMWARE == 'true' && !cancelled()
       run: |
         cd openwrt/bin/targets/*/*
+        zip -r all_ipk.zip packages
         rm -rf packages
         echo "::set-env name=FIRMWARE::$PWD"
         echo "::set-output name=status::success"
