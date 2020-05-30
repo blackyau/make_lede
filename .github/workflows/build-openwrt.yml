@@ -69,7 +69,7 @@ jobs:
         [ -e $FEEDS_CONF ] && mv $FEEDS_CONF openwrt/feeds.conf.default
         chmod +x $DIY_P1_SH
         cd openwrt
-        ../$DIY_P1_SH
+        $GITHUB_WORKSPACE/$DIY_P1_SH
 
     - name: Update feeds
       run: cd openwrt && ./scripts/feeds update -a
@@ -83,7 +83,7 @@ jobs:
         [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
         chmod +x $DIY_P2_SH
         cd openwrt
-        ../$DIY_P2_SH
+        $GITHUB_WORKSPACE/$DIY_P2_SH
 
     - name: SSH connection to Actions
       uses: P3TERX/debugger-action@master
@@ -116,15 +116,15 @@ jobs:
         name: OpenWrt_bin${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
         path: openwrt/bin
 
-    - name: Organize files
-      id: organize
-      if: env.UPLOAD_FIRMWARE == 'true' && !cancelled()
-      run: |
-        cd openwrt/bin/targets/*/*
-        zip -r all_ipk.zip packages
-        rm -rf packages
-        echo "::set-env name=FIRMWARE::$PWD"
-        echo "::set-output name=status::success"
+#     - name: Organize files
+#       id: organize
+#       if: env.UPLOAD_FIRMWARE == 'true' && !cancelled()
+#       run: |
+#         cd openwrt/bin/targets/*/*
+#         zip -r all_ipk.zip packages
+#         rm -rf packages
+#         echo "::set-env name=FIRMWARE::$PWD"
+#         echo "::set-output name=status::success"
 
     - name: Upload firmware directory
       uses: actions/upload-artifact@master
@@ -133,19 +133,20 @@ jobs:
         name: OpenWrt_firmware${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
         path: ${{ env.FIRMWARE }}
 
-    - name: Upload firmware to cowtransfer
-      if: steps.organize.outputs.status == 'success' && env.UPLOAD_COWTRANSFER == 'true' && !cancelled()
-      run: |
-        curl -fsSL git.io/file-transfer | sh
-        ./transfer cow --block 2621440 -s -p 64 --no-progress ${FIRMWARE} 2>&1 | tee cowtransfer.log
-        echo "::warning file=cowtransfer.com::$(cat cowtransfer.log | grep https)"
+#
+#     - name: Upload firmware to cowtransfer
+#       if: steps.organize.outputs.status == 'success' && env.UPLOAD_COWTRANSFER == 'true' && !cancelled()
+#       run: |
+#         curl -fsSL git.io/file-transfer | sh
+#         ./transfer cow --block 2621440 -s -p 64 --no-progress ${FIRMWARE} 2>&1 | tee cowtransfer.log
+#         echo "::warning file=cowtransfer.com::$(cat cowtransfer.log | grep https)"
 
-    - name: Upload firmware to WeTransfer
-      if: steps.organize.outputs.status == 'success' && env.UPLOAD_WETRANSFER == 'true' && !cancelled()
-      run: |
-        curl -fsSL git.io/file-transfer | sh
-        ./transfer wet -s -p 16 --no-progress ${FIRMWARE} 2>&1 | tee wetransfer.log
-        echo "::warning file=wetransfer.com::$(cat wetransfer.log | grep https)"
+#     - name: Upload firmware to WeTransfer
+#       if: steps.organize.outputs.status == 'success' && env.UPLOAD_WETRANSFER == 'true' && !cancelled()
+#       run: |
+#         curl -fsSL git.io/file-transfer | sh
+#         ./transfer wet -s -p 16 --no-progress ${FIRMWARE} 2>&1 | tee wetransfer.log
+#         echo "::warning file=wetransfer.com::$(cat wetransfer.log | grep https)"
     
 # 在 bin 目录中初始化 git
     - name: Commit files
@@ -153,9 +154,9 @@ jobs:
       if: steps.compile.outputs.status == 'success' && env.COMMIT_FILES == 'true' && !cancelled()
       run: |
         cd openwrt/bin/targets/*/*
+        zip -r all_ipk.zip packages
         rm -rf packages
         echo "::set-env name=FIRMWARE::$PWD"
-        echo "::set-output name=status::success"
         git init
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
