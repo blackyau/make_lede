@@ -152,9 +152,9 @@ jobs:
       id: packages
       if: steps.compile.outputs.status == 'success' && env.SAVE_PACKGES == 'true' && !cancelled()
       run: |
-        zip -r $GITHUB_WORKSPACE/all_ipk.zip openwrt/bin/packages
-        cd openwrt/bin/targets/*/*
-        mv $GITHUB_WORKSPACE/all_ipk.zip ./
+        cd openwrt/bin/packages/*
+        zip -r all_ipk.zip ./*
+        mv all_ipk.zip $GITHUB_WORKSPACE/openwrt/bin/targets/*/*/
         
 # 在 bin 目录中初始化 git
     - name: Commit files
