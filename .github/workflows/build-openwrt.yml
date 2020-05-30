@@ -206,3 +206,7 @@ jobs:
         tag_name: ${{ env.RELEASE_TAG }}
         body_path: release.txt
         files: ${{ env.FIRMWARE }}/*
+
+    - name: Post notice
+      run: |
+        wget https://sc.ftqq.com/${{ SCKEY }}.send?text=Make_Done
