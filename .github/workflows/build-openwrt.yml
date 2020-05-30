@@ -37,6 +37,7 @@ env:
   COMMIT_FILES: true
   UPLOAD_RELEASE: true
   PUSH_RELEASE: false
+  SAVE_PACKGES: true
   TZ: Asia/Shanghai
 
 jobs:
@@ -147,15 +148,20 @@ jobs:
 #         curl -fsSL git.io/file-transfer | sh
 #         ./transfer wet -s -p 16 --no-progress ${FIRMWARE} 2>&1 | tee wetransfer.log
 #         echo "::warning file=wetransfer.com::$(cat wetransfer.log | grep https)"
-    
+    - name: Save Packages
+      id: packages
+      if: steps.compile.outputs.status == 'success' && env.SAVE_PACKGES == 'true' && !cancelled()
+      run: |
+        zip -r $GITHUB_WORKSPACE/all_ipk.zip openwrt/bin/packages
+        cd openwrt/bin/targets/*/*
+        mv $GITHUB_WORKSPACE/all_ipk.zip ./
+        
 # 在 bin 目录中初始化 git
     - name: Commit files
       id: commit
       if: steps.compile.outputs.status == 'success' && env.COMMIT_FILES == 'true' && !cancelled()
       run: |
         cd openwrt/bin/targets/*/*
-        zip -r all_ipk.zip packages
-        rm -rf packages
         echo "::set-env name=FIRMWARE::$PWD"
         git init
         git config --local user.email "action@github.com"
