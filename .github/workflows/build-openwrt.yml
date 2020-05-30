@@ -210,4 +210,4 @@ jobs:
 
     - name: Post notice
       run: |
-        wget https://sc.ftqq.com/${{ SCKEY }}.send?text=Make_Done
+        wget https://sc.ftqq.com/${{ secrets.SCKEY }}.send?text=Make_Done
