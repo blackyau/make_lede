@@ -36,6 +36,7 @@ env:
   UPLOAD_WETRANSFER: false
   COMMIT_FILES: true
   UPLOAD_RELEASE: true
+  PUSH_RELEASE: false
   TZ: Asia/Shanghai
 
 jobs:
@@ -183,9 +184,10 @@ jobs:
         echo "::set-output name=status::success"
         
 # 将文件 push 到 文件分支
+# 注意文件 >100MB 会 PUSH 失败
     - name: Push file
       id: push_file
-      if: steps.commit.outputs.status == 'success' && !cancelled()
+      if: env.PUSH_RELEASE == 'true' && !cancelled()
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets.TOKEN }}
