@@ -9,7 +9,7 @@ Build OpenWrt using GitHub Actions
 - [ ] 上传固件到 Actions ArtiAfacts
 - [X] commit 固件
 - [X] 发布 releases
-- [X] PUSH 固件
+- [X] Push 到新 Branch
 - [ ] releases 保留 ipk
 
 ## License
