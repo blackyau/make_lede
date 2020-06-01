@@ -2,11 +2,15 @@
 
 Build OpenWrt using GitHub Actions
 
-# 备忘录
+# 当前配置
 
-已关闭 Push 文件到 branch，releases 里面的 CDN 无法读取文件
-
-保留了所有 ipk
+[ ] SSH
+[ ] 上传 bin 到 Actions ArtiAfacts
+[ ] 上传固件到 Actions ArtiAfacts
+[X] commit 固件
+[X] 发布 releases
+[X] PUSH 固件
+[ ] releases 保留 ipk
 
 ## License
 
