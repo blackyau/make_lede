@@ -29,10 +29,9 @@ env:
   CONFIG_FILE: .config
   DIY_P1_SH: diy-part1.sh
   DIY_P2_SH: diy-part2.sh
-  SSH_ACTIONS: false
+  SSH_ACTIONS: true
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: false
-  COMMIT_FILES: true
   UPLOAD_RELEASE: true
   PUSH_RELEASE: true
   SAVE_PACKGES: false
@@ -172,7 +171,7 @@ jobs:
 # 生成 branch 信息
     - name: Generate branch
       id: Gbranch
-      if: steps.commit.outputs.status == 'success' && env.COMMIT_FILES == 'true' && !cancelled()
+      if: steps.commit.outputs.status == 'success' && env.PUSH_RELEASE == 'true' && !cancelled()
       run: |
         echo -n "file-" > /tmp/branch.txt
         echo "${{ env.RELEASE_TAG }}" >> /tmp/branch.txt
