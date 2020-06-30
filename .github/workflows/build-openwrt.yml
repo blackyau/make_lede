@@ -149,7 +149,7 @@ jobs:
 # 在 bin 目录中初始化 git
     - name: Commit files
       id: commit
-      if: steps.compile.outputs.status == 'success' && env.COMMIT_FILES == 'true' && !cancelled()
+      if: steps.compile.outputs.status == 'success' && env.PUSH_RELEASE == 'true' && !cancelled()
       run: |
         cd openwrt/bin/targets/*/*
         echo "::set-env name=FIRMWARE::$PWD"
@@ -173,7 +173,7 @@ jobs:
 # 生成 tag
     - name: Generate tag
       id: tag
-      if: steps.commit.outputs.status == 'success' && env.COMMIT_FILES == 'true' && !cancelled()
+      if: steps.commit.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true' && !cancelled()
       run: |
         echo "::set-env name=RELEASE_TAG::$(date +"%Y.%m.%d-%H.%M")"
         echo "🚀 Auto build" >> release.txt
