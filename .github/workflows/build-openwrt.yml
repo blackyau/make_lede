@@ -34,7 +34,7 @@ env:
   UPLOAD_FIRMWARE: false
   UPLOAD_RELEASE: true
   PUSH_RELEASE: true
-  SAVE_PACKGES: false
+  RM_PACKGES: true
   TZ: Asia/Shanghai
 
 jobs:
@@ -138,13 +138,12 @@ jobs:
         name: OpenWrt_firmware${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
         path: ${{ env.FIRMWARE }}
 
-    - name: Save Packages
+    - name: Rm Packages
       id: packages
-      if: steps.compile.outputs.status == 'success' && env.SAVE_PACKGES == 'true' && !cancelled()
+      if: steps.compile.outputs.status == 'success' && env.RM_PACKGES == 'true' && !cancelled()
       run: |
         cd openwrt/bin/packages/*
-        zip -r all_ipk.zip ./*
-        mv all_ipk.zip $GITHUB_WORKSPACE/openwrt/bin/targets/*/*/
+        rm -rf packages
         
 # 在 bin 目录中初始化 git
     - name: Commit files
