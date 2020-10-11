@@ -12,6 +12,10 @@ Build OpenWrt using GitHub Actions
 - [X] Push 到新 Branch
 - [ ] releases 保留 ipk
 
+# 备忘
+
+`lede/package/network/config/firewall/files`
+
 ## License
 
 [MIT](https://github.com/P3TERX/Actions-OpenWrt/blob/master/LICENSE) © P3TERX
